@@ -4,8 +4,11 @@ const bcrypt = require('bcryptjs');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: '*', 
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 const sequelize = new Sequelize({ dialect: 'sqlite', storage: './database.sqlite' });
 

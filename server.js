@@ -7,10 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './database.sqlite'
-});
+const sequelize = new Sequelize({ dialect: 'sqlite', storage: './database.sqlite' });
 
 const User = sequelize.define('User', {
   username: { type: DataTypes.STRING, unique: true, allowNull: false },
@@ -23,17 +20,16 @@ sequelize.sync().then(async () => {
     where: { username: 'admin' },
     defaults: { password: hashedPassword }
   });
-  console.log("Database synced and admin user created.");
+  console.log("Database synced! Use admin / password123 to login.");
 });
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ where: { username } });
-
   if (user && await bcrypt.compare(password, user.password)) {
-    res.json({ success: true, message: "Logged in!" });
+    res.json({ success: true });
   } else {
-    res.status(401).json({ success: false, message: "Invalid credentials" });
+    res.status(401).json({ success: false });
   }
 });
 

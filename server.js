@@ -4,11 +4,14 @@ const bcrypt = require('bcryptjs');
 const cors = require('cors');
 
 const app = express();
+
 app.use(cors({
   origin: '*', 
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.use(express.json()); 
 
 const sequelize = new Sequelize({ dialect: 'sqlite', storage: './database.sqlite' });
 
@@ -28,11 +31,16 @@ sequelize.sync().then(async () => {
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ where: { username } });
-  if (user && await bcrypt.compare(password, user.password)) {
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ success: false });
+  
+  try {
+    const user = await User.findOne({ where: { username } });
+    if (user && await bcrypt.compare(password, user.password)) {
+      res.json({ success: true });
+    } else {
+      res.status(401).json({ success: false });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false });
   }
 });
 

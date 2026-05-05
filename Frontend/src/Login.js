@@ -6,7 +6,7 @@ function Login({ onLoginSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('https://reimagined-yodel-97jx5jgw5p9427v55-5000.app.github.dev/', {
+    const response = await fetch('https://reimagined-yodel-97jx5jgw5p9427v55-5000.app.github.dev/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
